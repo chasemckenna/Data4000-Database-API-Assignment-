@@ -7,6 +7,9 @@ from config import get_settings
 
 client = None
 
+# customers(name) and products(product_name) pull in the matching names
+ORDER_COLUMNS = "*, customers(name), products(product_name)"
+
 
 def get_client():
     # Create the Supabase client the first time, then reuse it
@@ -25,6 +28,14 @@ def get_products():
     return get_client().table("products").select("*").order("product_id").execute().data
 
 
+def get_product(product_id):
+    # Used right before saving so the order always gets the current price
+    response = get_client().table("products").select("*").eq("product_id", product_id).execute()
+    if response.data:
+        return response.data[0]
+    return None
+
+
 def insert_order(customer_id, product_id, quantity, unit_price):
     # The database creates the order_id, so we don't send one
     new_order = {
@@ -39,9 +50,17 @@ def insert_order(customer_id, product_id, quantity, unit_price):
 
 
 def get_order(order_id):
-    # customers(name) and products(product_name) pull in the matching names
     response = (get_client().table("orders")
-                .select("*, customers(name), products(product_name)")
+                .select(ORDER_COLUMNS)
                 .eq("order_id", order_id)
+                .execute())
+    return response.data
+
+
+def get_orders():
+    # Newest orders first
+    response = (get_client().table("orders")
+                .select(ORDER_COLUMNS)
+                .order("order_id", desc=True)
                 .execute())
     return response.data
