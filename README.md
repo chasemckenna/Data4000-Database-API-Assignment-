@@ -4,7 +4,7 @@ A Streamlit web app connected to the Campus Store Supabase database. You can loo
 customers and products, enter an order, and check that it was saved. This replaces my
 earlier terminal program (`order_entry.py`, still in the repo).
 
-**Live app:** https://YOUR-APP-NAME.streamlit.app *(password protected; instructor
+**Live app:** https://7bp28nckfqfxrvsmjkbnxj.streamlit.app *(password protected; instructor
 access sent privately)*
 
 ## Files
